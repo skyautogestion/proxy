@@ -1,5 +1,5 @@
 // defining the server port
-const port = 8000;
+const port = 8443;
 
 // initializing installed dependencies
 const express = require("express");
@@ -17,9 +17,8 @@ const limiter = rateLimit({
 });
 
 const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx', 'https://misky.sky.com.mx'];
-allowedOrigins.push('https://localhost:3000');
 if ("development" === env) { // local development purposes
-  
+  allowedOrigins.push('https://localhost:3000');
 }
 
 // X-Rate-Limiting
