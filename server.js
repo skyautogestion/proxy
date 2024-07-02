@@ -64,8 +64,8 @@ const INTERNO_AUTH = {
 // listening for port
 app.listen(port, () => console.log(`Server is running on ${port}`));
 
-app.get("/", (req, rest) => {
-  return "hello world";
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome !!!!" });
 });
 
 // API request
