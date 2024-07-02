@@ -1,6 +1,3 @@
-// defining the server port
-const port = 8443;
-
 // initializing installed dependencies
 const express = require("express");
 const rateLimit = require("express-rate-limit");
@@ -62,7 +59,7 @@ const INTERNO_AUTH = {
 };
 
 // listening for port
-app.listen(port, () => console.log(`Server is running on ${port}`));
+app.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome !!!!" });
