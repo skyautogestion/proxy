@@ -13,12 +13,13 @@ const env = process.env.NODE_ENV;
 
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: 30, // limit each IP to 5 requests per windowMs
 });
 
 const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx'];
+allowedOrigins.push('https://localhost:3000');
 if ("development" === env) { // local development purposes
-  allowedOrigins.push('https://localhost:3000');
+  
 }
 
 // X-Rate-Limiting
@@ -41,9 +42,6 @@ app.use(
 );
 
 const {
-  REACT_APP_URL_OSB,
-  REACT_APP_USERNAME_OSB,
-  REACT_APP_PASSWORD_OSB,
   REACT_APP_URL_INTERNO,
   REACT_APP_USER_INTERNO,
   REACT_APP_PASSWORD_INTERNO,
@@ -55,8 +53,8 @@ const CONTENT_ACCEPT_JSON = {
 };
 
 const OSB_AUTH = {
-  username: REACT_APP_USERNAME_OSB ?? "",
-  password: REACT_APP_PASSWORD_OSB ?? "",
+  username: REACT_APP_USER_INTERNO ?? "",
+  password: REACT_APP_PASSWORD_INTERNO ?? "",
 };
 
 const INTERNO_AUTH = {
@@ -75,7 +73,7 @@ app.get("/", (req, rest) => {
 app.post("/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
   const options = {
     method: "POST",
-    url: REACT_APP_URL_OSB + "/EnterpriseServices/Sel/Solicitud/generarQueja",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/generarQueja",
     data: req,
     headers: CONTENT_ACCEPT_JSON,
     auth: OSB_AUTH,
@@ -95,7 +93,7 @@ app.post("/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, res) => {
   const options = {
     method: "POST",
     url:
-      REACT_APP_URL_OSB + "/EnterpriseServices/Sel/Solicitud/crearSugerencia",
+      REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSugerencia",
     data: req,
     headers: CONTENT_ACCEPT_JSON,
     auth: OSB_AUTH,
@@ -117,7 +115,7 @@ app.post(
     const options = {
       method: "POST",
       url:
-        REACT_APP_URL_OSB +
+        REACT_APP_URL_INTERNO +
         "/EnterpriseServices/Sel/Solicitud/responderEncuesta",
       data: req,
       headers: CONTENT_ACCEPT_JSON,
@@ -141,7 +139,7 @@ app.post(
     const options = {
       method: "POST",
       url:
-        REACT_APP_URL_OSB +
+        REACT_APP_URL_INTERNO +
         "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
       data: req,
       headers: CONTENT_ACCEPT_JSON,
@@ -254,24 +252,7 @@ app.post("/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) => {
-  const options = {
-    method: "POST",
-    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest",
-    data: req,
-    headers: CONTENT_ACCEPT_JSON,
-    auth: INTERNO_AUTH,
-  };
 
-  axios
-    .request(options)
-    .then(function (response) {
-      res.json(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-});
 
 app.post("/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) => {
   const options = {
@@ -733,6 +714,370 @@ app.post("/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRe
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActivacionBlueToGoRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaControlRemotoRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarDatosFiscalesRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarPPV",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosCuentaRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarTICorporativo",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+
+app.post("/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/enviarEmail",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+
+app.post("/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarDatosRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+
+app.post("/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/cambiarContrasena",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RecuperarPasswordUsrRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarQuejaRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarSugerenciaRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarIRD",
     data: req,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
