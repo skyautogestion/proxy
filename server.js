@@ -16,7 +16,7 @@ const limiter = rateLimit({
   max: 30, // limit each IP to 5 requests per windowMs
 });
 
-const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx'];
+const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx', 'https://misky.sky.com.mx'];
 allowedOrigins.push('https://localhost:3000');
 if ("development" === env) { // local development purposes
   
