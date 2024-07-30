@@ -37,6 +37,8 @@ app.use(
   })
 );
 
+app.enable('trust proxy')
+
 const {
   REACT_APP_URL_INTERNO,
   REACT_APP_USER_INTERNO,
