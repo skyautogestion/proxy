@@ -61,12 +61,20 @@ const INTERNO_AUTH = {
 // listening for port
 app.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
 
+app.use((req, res, next) => {
+  console.log(req.ip);
+  if (req.ip !== "172.173.140.133") {
+    return res.status(403).send();
+  }
+  next();
+});
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome !!!!" });
 });
 
 // API request
-app.post("/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/generarQueja",
@@ -85,7 +93,7 @@ app.post("/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, res) => {
   const options = {
     method: "POST",
     url:
@@ -153,7 +161,7 @@ app.post(
   }
 );
 
-app.post("/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/AutenticarUsuarioRest",
@@ -172,7 +180,7 @@ app.post("/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaConsumoDatosRest",
@@ -191,7 +199,7 @@ app.post("/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaDatosGeneralesRest",
@@ -210,7 +218,7 @@ app.post("/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest",
@@ -229,7 +237,7 @@ app.post("/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (req, res) => 
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest",
@@ -250,7 +258,7 @@ app.post("/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
 
 
 
-app.post("/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarServiciosRest",
@@ -269,7 +277,7 @@ app.post("/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) =
     });
 });
 
-app.post("/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/ModificarPasswordRegistroRest",
@@ -288,7 +296,7 @@ app.post("/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest",
@@ -307,7 +315,7 @@ app.post("/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (req, res) => 
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPagosPorEventoRest",
@@ -326,7 +334,7 @@ app.post("/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPrecioRecargaRest",
@@ -345,7 +353,7 @@ app.post("/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
@@ -364,7 +372,7 @@ app.post("/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", (req, res)
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
@@ -383,7 +391,7 @@ app.post("/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", (req, res)
     });
 });
 
-app.post("/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario",
@@ -402,7 +410,7 @@ app.post("/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarEstadoCuenta",
@@ -421,7 +429,7 @@ app.post("/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (req, res) => 
     });
 });
 
-app.post("/EnterpriseServices/Brm/Factura/consultarFactura", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFactura",
@@ -440,7 +448,7 @@ app.post("/EnterpriseServices/Brm/Factura/consultarFactura", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo",
@@ -459,7 +467,7 @@ app.post("/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (req, res) =
     });
 });
 
-app.post("/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarLDAP",
@@ -478,7 +486,7 @@ app.post("/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Pago/consultarPago",
@@ -497,7 +505,7 @@ app.post("/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarProducto",
@@ -516,7 +524,7 @@ app.post("/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (req, res) =
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarRegimenFiscalRest",
@@ -535,7 +543,7 @@ app.post("/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
@@ -554,7 +562,7 @@ app.post("/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", (req, res)
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarUsoCFDIRest",
@@ -573,7 +581,7 @@ app.post("/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest",
@@ -592,7 +600,7 @@ app.post("/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) =
     });
 });
 
-app.post("/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSolicitud",
@@ -611,7 +619,7 @@ app.post("/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/EjecutarRemoteBookingRest",
@@ -630,7 +638,7 @@ app.post("/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/RegistrarDatosFiscalesRest",
@@ -649,7 +657,7 @@ app.post("/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/obtenerFactura",
@@ -668,7 +676,7 @@ app.post("/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Okta/Usuario/restablecerContrasena", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/restablecerContrasena",
@@ -687,7 +695,7 @@ app.post("/EnterpriseServices/Okta/Usuario/restablecerContrasena", (req, res) =>
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCuentaRest",
@@ -706,7 +714,7 @@ app.post("/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => {
     });
 });
 
-app.post("/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", (req, res) => {
+app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest",
@@ -725,7 +733,7 @@ app.post("/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRe
     });
 });
 
-app.post("/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActivacionBlueToGoRest",
@@ -744,7 +752,7 @@ app.post("/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest",
@@ -763,7 +771,7 @@ app.post("/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => 
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest",
@@ -782,7 +790,7 @@ app.post("/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaControlRemotoRest",
@@ -801,7 +809,7 @@ app.post("/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarDatosFiscalesRest",
@@ -820,7 +828,7 @@ app.post("/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest",
@@ -839,7 +847,7 @@ app.post("/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo",
@@ -858,7 +866,7 @@ app.post("/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, 
     });
 });
 
-app.post("/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarPPV",
@@ -877,7 +885,7 @@ app.post("/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest",
@@ -896,7 +904,7 @@ app.post("/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => 
     });
 });
 
-app.post("/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosCuentaRest",
@@ -915,7 +923,7 @@ app.post("/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarTICorporativo",
@@ -935,7 +943,7 @@ app.post("/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) 
 });
 
 
-app.post("/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/enviarEmail",
@@ -955,7 +963,7 @@ app.post("/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
 });
 
 
-app.post("/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarDatosRest",
@@ -975,7 +983,7 @@ app.post("/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
 });
 
 
-app.post("/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/cambiarContrasena",
@@ -994,7 +1002,7 @@ app.post("/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
     });
 });
 
-app.post("/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RecuperarPasswordUsrRest",
@@ -1013,7 +1021,7 @@ app.post("/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
@@ -1032,7 +1040,7 @@ app.post("/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarQuejaRest",
@@ -1051,7 +1059,7 @@ app.post("/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarSugerenciaRest",
@@ -1070,7 +1078,7 @@ app.post("/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
     });
 });
 
-app.post("/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarIRD",
