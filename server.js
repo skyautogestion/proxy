@@ -1096,3 +1096,22 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res)
       console.error(error);
     });
 });
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ValidarPreRegistroRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
