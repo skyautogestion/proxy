@@ -37,8 +37,6 @@ app.use(
   })
 );
 
-app.enable('trust proxy')
-
 const {
   REACT_APP_URL_INTERNO,
   REACT_APP_USER_INTERNO,
@@ -62,14 +60,6 @@ const INTERNO_AUTH = {
 
 // listening for port
 app.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
-
-app.use((req, res, next) => {
-  console.log(req.ip);
-  if (req.ip !== "172.173.140.133") {
-    return res.status(403).send();
-  }
-  next();
-});
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome !!!!" });
