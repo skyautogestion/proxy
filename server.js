@@ -18,6 +18,8 @@ if ("development" === env) { // local development purposes
   allowedOrigins.push('https://localhost:3000');
 }
 
+app.set('trust proxy', 1);
+
 // X-Rate-Limiting
 app.use(limiter);
 // CORS
