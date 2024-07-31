@@ -8,7 +8,7 @@ const app = express();
 const cors = require("cors");
 const env = process.env.NODE_ENV;
 
-const validIPs = ['::1']
+const validIPs = ['187.189.114.188']
 
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
@@ -19,8 +19,6 @@ const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespacios
 if ("development" === env) { // local development purposes
   allowedOrigins.push('https://localhost:3000');
 }
-
-app.set('trust proxy', 1);
 
 // X-Rate-Limiting
 app.use(limiter);
@@ -63,19 +61,18 @@ const INTERNO_AUTH = {
 };
 
 // listening for port
-app.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
-
+app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server is running on ${process.env.PORT}`));
+app.set('trust proxy', true);
 app.use((req, res, next) => {
-  
-    console.log("IP: "+req.ip);
+
+    const ip = req.ip || req.headers['x-forwarded-for'] || null
     
-    if(validIPs.includes(req.socket.remoteAddress)){
-        // IP is ok, so go on
-        console.log("IP ok");
+    if(validIPs.includes(ip)){
         next();
     }
     else{
         // Invalid ip
+        console.log("invalid ip: "+ip)
         return res.status(401).json({ msg: 'Unauthorized user' });
     }
   })
