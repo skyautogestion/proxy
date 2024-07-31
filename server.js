@@ -8,6 +8,8 @@ const app = express();
 const cors = require("cors");
 const env = process.env.NODE_ENV;
 
+const validIPs = ['::1']
+
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
   max: 30, // limit each IP to 5 requests per windowMs
@@ -62,6 +64,21 @@ const INTERNO_AUTH = {
 
 // listening for port
 app.listen(process.env.PORT, () => console.log(`Server is running on ${process.env.PORT}`));
+
+app.use((req, res, next) => {
+  
+    console.log("IP: "+req.ip);
+    
+    if(validIPs.includes(req.socket.remoteAddress)){
+        // IP is ok, so go on
+        console.log("IP ok");
+        next();
+    }
+    else{
+        // Invalid ip
+        return res.status(401).json({ msg: 'Unauthorized user' });
+    }
+  })
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome !!!!" });
