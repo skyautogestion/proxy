@@ -11,6 +11,9 @@ const env = process.env.NODE_ENV;
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
   max: 30, // limit each IP to 5 requests per windowMs
+  keyGenerator: (req, res) => {
+    return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
+  }
 });
 
 const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx', 'https://misky.sky.com.mx'];
@@ -1022,6 +1025,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
 
   // validate token
   const token = req.headers["Acceptcrc"];
+  console.log("headers: "+req.headers);
 
   const validateTokenData = `
     {
