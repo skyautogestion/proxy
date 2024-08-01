@@ -8,8 +8,6 @@ const app = express();
 const cors = require("cors");
 const env = process.env.NODE_ENV;
 
-const validIPs = ['187.189.114.188']
-
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
   max: 30, // limit each IP to 5 requests per windowMs
@@ -21,6 +19,7 @@ if ("development" === env) { // local development purposes
 }
 
 // X-Rate-Limiting
+app.set('trust proxy', 1)
 app.use(limiter);
 // CORS
 app.use(cors({
@@ -43,6 +42,8 @@ const {
   REACT_APP_URL_INTERNO,
   REACT_APP_USER_INTERNO,
   REACT_APP_PASSWORD_INTERNO,
+  REACT_APP_GOOGLE_API_KEY,
+  REACT_APP_RECAPTCHA_KEY
 } = process.env;
 
 const CONTENT_ACCEPT_JSON = {
@@ -62,20 +63,6 @@ const INTERNO_AUTH = {
 
 // listening for port
 app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server is running on ${process.env.PORT}`));
-app.set('trust proxy', true);
-app.use((req, res, next) => {
-
-    const ip = req.ip || req.headers['x-forwarded-for'] || null
-    
-    if(validIPs.includes(ip)){
-        next();
-    }
-    else{
-        // Invalid ip
-        console.log("invalid ip: "+ip)
-        return res.status(401).json({ msg: 'Unauthorized user' });
-    }
-  })
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome !!!!" });
@@ -1030,22 +1017,61 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
-  const options = {
+  //ip from client
+  const ip = req.ip || req.headers['x-forwarded-for'] || null
+
+  // validate token
+  const token = req.headers["Acceptcrc"];
+
+  const validateTokenData = `
+    {
+  "event": {
+    "token": "${token}",
+    "expectedAction": "USER_ACTION",
+    "siteKey": "${REACT_APP_RECAPTCHA_KEY}"
+  }
+}
+  ` 
+
+  const validateTokenOptions = {
     method: "POST",
-    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
-    data: req,
-    headers: CONTENT_ACCEPT_JSON,
-    auth: INTERNO_AUTH,
+    url: "https://recaptchaenterprise.googleapis.com/v1/projects/sel-sky/assessments?key=" + REACT_APP_GOOGLE_API_KEY,
+    data: validateTokenData,
+    headers: CONTENT_ACCEPT_JSON
   };
 
   axios
-    .request(options)
+    .request(validateTokenOptions)
     .then(function (response) {
-      res.json(response.data);
+      const data = response.data
+      if(!data["tokenProperties"].valid) {
+        console.log("captcha is invalid from IP: "+ip)
+        return res.status(401).json({ msg: 'Unauthorized user' });
+      } else { // call OSB
+        const options = {
+          method: "POST",
+          url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
+          data: req,
+          headers: CONTENT_ACCEPT_JSON,
+          auth: INTERNO_AUTH,
+        };
+      
+        axios
+          .request(options)
+          .then(function (response) {
+            res.json(response.data);
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
     })
     .catch(function (error) {
       console.error(error);
+      console.log("it was not possible to validate the captcha from IP: "+ip)
+      return res.status(401).json({ msg: 'Unauthorized user' });
     });
+
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
