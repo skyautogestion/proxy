@@ -1024,7 +1024,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
   const ip = req.ip || req.headers['x-forwarded-for'] || null
 
   // validate token
-  const token = req.headers["acceptcrc"];
+  const token = req.headers.acceptcrc;
 
   const validateTokenData = `
     {
@@ -1071,8 +1071,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     })
     .catch(function (error) {
       console.log("it was not possible to validate the captcha from IP: "+ip)
-      console.log(req.headers)
-      console.log(req.headers.acceptcrc)
+      console.log(error);
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
