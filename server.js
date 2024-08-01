@@ -1026,15 +1026,13 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
   // validate token
   const token = req.headers.acceptcrc;
 
-  const validateTokenData = `
-    {
-  "event": {
-    "token": "${token}",
-    "expectedAction": "USER_ACTION",
-    "siteKey": "${REACT_APP_RECAPTCHA_KEY}"
-  }
-}
-  ` 
+  const validateTokenData = { 
+    "event": { 
+      "token": token, 
+      "expectedAction": "USER_ACTION", 
+      "siteKey": REACT_APP_RECAPTCHA_KEY
+    } 
+  };
 
   const validateTokenOptions = {
     method: "POST",
