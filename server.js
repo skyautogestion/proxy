@@ -1072,6 +1072,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     .catch(function (error) {
       console.log("it was not possible to validate the captcha from IP: "+ip)
       console.log(req.headers)
+      console.log(req.headers.acceptcrc)
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
