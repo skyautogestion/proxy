@@ -1038,7 +1038,10 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     method: "POST",
     url: "https://recaptchaenterprise.googleapis.com/v1/projects/sel-sky/assessments?key=" + REACT_APP_GOOGLE_API_KEY,
     data: validateTokenData,
-    headers: CONTENT_ACCEPT_JSON
+    headers:  { 
+      "Content-type": "application/json",
+      'Accept': "application/json",
+    }
   };
 
   axios
@@ -1046,7 +1049,8 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     .then(function (response) {
       const data = response.data
       if(!data["tokenProperties"].valid) {
-        console.log("captcha is invalid from IP: "+ip)
+        const reason = data["tokenProperties"].invalidReason
+        console.log("captcha is invalid from IP: "+ip+" reason: "+reason);
         return res.status(401).json({ msg: 'Unauthorized user' });
       } else { // call OSB
         const options = {
@@ -1150,3 +1154,12 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       console.error(error);
     });
 });
+
+/*
+REACT_APP_URL_INTERNO=https://qaselosbext.sky.com.mx
+REACT_APP_USER_INTERNO=sel_osbext_qa
+REACT_APP_PASSWORD_INTERNO=QdVLlbhV3JlTCE1XKQiv
+REACT_APP_GOOGLE_API_KEY=AIzaSyBAlhKIsHK66D6O58oeDaE4QUamuKjd0O8
+REACT_APP_RECAPTCHA_KEY=6Ld9QbAmAAAAABG4mGQ2h-uAdcDnFfYHTNdSswzN
+PORT=8090
+*/
