@@ -1154,12 +1154,3 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       console.error(error);
     });
 });
-
-/*
-REACT_APP_URL_INTERNO=https://qaselosbext.sky.com.mx
-REACT_APP_USER_INTERNO=sel_osbext_qa
-REACT_APP_PASSWORD_INTERNO=QdVLlbhV3JlTCE1XKQiv
-REACT_APP_GOOGLE_API_KEY=AIzaSyBAlhKIsHK66D6O58oeDaE4QUamuKjd0O8
-REACT_APP_RECAPTCHA_KEY=6Ld9QbAmAAAAABG4mGQ2h-uAdcDnFfYHTNdSswzN
-PORT=8090
-*/
