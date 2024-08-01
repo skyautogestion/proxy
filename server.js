@@ -1154,3 +1154,193 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       console.error(error);
     });
 });
+
+app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarPrecio",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarInformacionFiscalRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqueteRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaVeTVPricesRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarDireccion",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaRevistaSKYRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarCanal",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Sesion/consultarMenu",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
+app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseServices/RN/GeneraURLChatRest",
+    data: req,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
