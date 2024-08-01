@@ -1024,8 +1024,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
   const ip = req.ip || req.headers['x-forwarded-for'] || null
 
   // validate token
-  const token = req.headers["Acceptcrc"];
-  console.log("headers: "+req.headers);
+  const token = req.headers["acceptcrc"];
 
   const validateTokenData = `
     {
