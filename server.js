@@ -29,7 +29,7 @@ app.use(cors({
   origin:allowedOrigins,
   credentials: true,
   methods: ['POST', 'GET', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc']
 }));
 // HSTS
 app.use(helmet());
