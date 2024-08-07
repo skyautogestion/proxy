@@ -1044,6 +1044,11 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     }
   };
 
+  if (!token) {
+    console.log("NON_TOKEN_FOUND from IP: "+ip)
+    return res.status(401).json({ msg: 'Unauthorized user' });
+  }
+
   axios
     .request(validateTokenOptions)
     .then(function (response) {
@@ -1072,8 +1077,10 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
       }
     })
     .catch(function (error) {
+      const errorData = error["response"]["data"]["error"] ?? error;
+      const errorCode =  error["code"];
       console.log("it was not possible to validate the captcha from IP: "+ip)
-      console.log(error);
+      console.log('code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " + "respuesta al cliente: 401");
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
