@@ -10,7 +10,15 @@ const env = process.env.NODE_ENV;
 
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
-  max: 30, // limit each IP to 5 requests per windowMs
+  max: 100, // limit each IP to 5 requests per windowMs
+  keyGenerator: (req, res) => {
+    return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
+  }
+});
+
+const preRegistroLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 2 minutos
+  max: 1, // limit each IP to 2 requests per windowMs
   keyGenerator: (req, res) => {
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   }
@@ -23,7 +31,10 @@ if ("development" === env) { // local development purposes
 
 // X-Rate-Limiting
 app.set('trust proxy', 1)
+app.use('/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest', preRegistroLimiter);
 app.use(limiter);
+
+
 // CORS
 app.use(cors({
   origin:allowedOrigins,
