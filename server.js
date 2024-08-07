@@ -40,7 +40,7 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true,
   preflightContinue: false,
-  methods: ['POST', 'GET', 'PATCH', 'DELETE'],
+  methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc']
 }));
 
