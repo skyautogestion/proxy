@@ -98,7 +98,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -118,7 +118,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -141,7 +141,7 @@ app.post(
         res.json(response.data);
       })
       .catch(function (error) {
-        console.error(error);
+        consoleError(error);
       });
   }
 );
@@ -165,7 +165,7 @@ app.post(
         res.json(response.data);
       })
       .catch(function (error) {
-        console.error(error);
+        consoleError(error);
       });
   }
 );
@@ -185,7 +185,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -204,7 +204,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -223,7 +223,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -242,7 +242,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -261,7 +261,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -282,7 +282,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -301,7 +301,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -320,7 +320,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -339,7 +339,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -358,7 +358,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -377,7 +377,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -396,7 +396,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -415,7 +415,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -434,7 +434,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -453,7 +453,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -472,7 +472,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -491,7 +491,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -510,7 +510,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -529,7 +529,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -548,7 +548,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -567,7 +567,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -586,7 +586,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -605,7 +605,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -624,7 +624,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -643,7 +643,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -662,7 +662,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -681,7 +681,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -700,7 +700,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -719,7 +719,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -738,7 +738,7 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -757,7 +757,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -776,7 +776,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -795,7 +795,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -814,7 +814,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -833,7 +833,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -852,7 +852,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -871,7 +871,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -890,7 +890,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -909,7 +909,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -928,7 +928,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -947,7 +947,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -967,7 +967,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -987,7 +987,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1007,7 +1007,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1026,7 +1026,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1083,15 +1083,12 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
             res.json(response.data);
           })
           .catch(function (error) {
-            console.error(error);
+            consoleError(error);
           });
       }
     })
     .catch(function (error) {
-      const errorData = error["response"]["data"]["error"] ?? error;
-      const errorCode =  error["code"];
-      console.log("it was not possible to validate the captcha from IP: "+ip)
-      console.log('code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " + "respuesta al cliente: 401");
+      consoleError(error);
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
@@ -1112,7 +1109,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1131,7 +1128,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1150,7 +1147,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1169,7 +1166,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1188,7 +1185,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1207,7 +1204,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1226,7 +1223,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1245,7 +1242,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) =>
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1264,7 +1261,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1283,7 +1280,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1302,7 +1299,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1321,7 +1318,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1340,7 +1337,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
 
@@ -1359,6 +1356,18 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      console.error(error);
+      consoleError(error);
     });
 });
+
+function consoleError(error) {
+  const errorData   = error["response"]["data"]["error"] ?? error;
+  const errorCode   = error["code"];
+  const errorCause  = error["cause"];
+  const errorUrl    = error["config"]["url"];
+  const errorMethod    = error["config"]["method"];
+  console.log(
+    'code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " + "respuesta al cliente: 401" + " | " +
+    'cause: ' + JSON.stringify(errorCause) + " | " + "url: " + errorUrl + " | " + "method: " + errorMethod
+  );
+}
