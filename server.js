@@ -17,8 +17,8 @@ const limiter = rateLimit({
 });
 
 const preRegistroLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 2 minutos
-  max: 1, // limit each IP to 2 requests per windowMs
+  windowMs: 1 * 60 * 1000, // 1 minuto
+  max: 3, // limit each IP to 3 requests per windowMs
   keyGenerator: (req, res) => {
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   }
