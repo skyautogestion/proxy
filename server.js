@@ -1361,7 +1361,7 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
 });
 
 function consoleError(error) {
-  const errorData   = error.response?.data?.error ?? error;
+  const errorData   = error.response?.data?.error ?? error.message ?? error;
   const errorCode   = error.code;
   const errorCause  = error.cause;
   const errorUrl    = error.config?.url;
