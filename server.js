@@ -1367,7 +1367,7 @@ function consoleError(error) {
   const errorUrl    = error.config?.url;
   const errorMethod    = error.config?.method;
   console.log(
-    'code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " + "respuesta al cliente: 401" + " | " +
+    'code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " +
     'cause: ' + JSON.stringify(errorCause) + " | " + "url: " + errorUrl + " | " + "method: " + errorMethod
   );
 }
