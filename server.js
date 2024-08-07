@@ -36,14 +36,13 @@ app.use(limiter);
 
 
 // CORS
-/*
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
+  preflightContinue: false,
   methods: ['POST', 'GET', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc']
 }));
-*/
 
 // HSTS
 app.use(helmet());
