@@ -1056,7 +1056,8 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
   };
 
   if (!token) {
-    console.log("NON_TOKEN_FOUND from IP: "+ip)
+    const date = new Date(Date.now()).toLocaleString();
+    console.log('fecha: ' + date + " | " + "NON_TOKEN_FOUND from IP: "+ip)
     return res.status(401).json({ msg: 'Unauthorized user' });
   }
 
@@ -1065,8 +1066,9 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
     .then(function (response) {
       const data = response.data
       if(!data["tokenProperties"].valid) {
-        const reason = data["tokenProperties"].invalidReason
-        console.log("captcha is invalid from IP: "+ip+" reason: "+reason);
+        const reason = data["tokenProperties"].invalidReason;
+        const date = new Date(Date.now()).toLocaleString();
+        console.log('fecha: ' + date + " | " + "captcha is invalid from IP: "+ip+" reason: "+reason);
         return res.status(401).json({ msg: 'Unauthorized user' });
       } else { // call OSB
         const options = {
@@ -1366,7 +1368,9 @@ function consoleError(error) {
   const errorCause  = error.cause;
   const errorUrl    = error.config?.url;
   const errorMethod    = error.config?.method;
+  const date = new Date(Date.now()).toLocaleString();
   console.log(
+    'fecha: ' + date + " | " + 
     'code: ' + errorCode + " | " + "error: " + JSON.stringify(errorData) + " | " +
     'cause: ' + JSON.stringify(errorCause) + " | " + "url: " + errorUrl + " | " + "method: " + errorMethod
   );
