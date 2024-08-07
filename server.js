@@ -89,7 +89,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/generarQueja",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: OSB_AUTH,
   };
@@ -110,7 +110,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, r
     method: "POST",
     url:
       REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSugerencia",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: OSB_AUTH,
   };
@@ -134,7 +134,7 @@ app.post(
       url:
         REACT_APP_URL_INTERNO +
         "/EnterpriseServices/Sel/Solicitud/responderEncuesta",
-      data: req,
+      data: req.body,
       headers: CONTENT_ACCEPT_JSON,
       auth: OSB_AUTH,
     };
@@ -159,7 +159,7 @@ app.post(
       url:
         REACT_APP_URL_INTERNO +
         "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
-      data: req,
+      data: req.body,
       headers: CONTENT_ACCEPT_JSON,
       auth: OSB_AUTH,
     };
@@ -180,7 +180,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/AutenticarUsuarioRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -201,7 +201,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaConsumoDatosRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -221,7 +221,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaDatosGeneralesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -241,7 +241,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -261,7 +261,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req,
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -283,7 +283,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarServiciosRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -303,7 +303,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/ModificarPasswordRegistroRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -323,7 +323,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -343,7 +343,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPagosPorEventoRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -363,7 +363,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPrecioRecargaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -383,7 +383,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -403,7 +403,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -423,7 +423,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -443,7 +443,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarEstadoCuenta",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -463,7 +463,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFactura",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -483,7 +483,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -503,7 +503,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) =
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarLDAP",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -523,7 +523,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Pago/consultarPago",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -543,7 +543,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarProducto",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -563,7 +563,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarRegimenFiscalRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -583,7 +583,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -603,7 +603,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) =
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarUsoCFDIRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -623,7 +623,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -643,7 +643,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSolicitud",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -663,7 +663,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/EjecutarRemoteBookingRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -683,7 +683,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/RegistrarDatosFiscalesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -703,7 +703,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/obtenerFactura",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -723,7 +723,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/restablecerContrasena",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -743,7 +743,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCuentaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -763,7 +763,7 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -783,7 +783,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActivacionBlueToGoRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -803,7 +803,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -823,7 +823,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -843,7 +843,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaControlRemotoRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -863,7 +863,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarDatosFiscalesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -883,7 +883,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -903,7 +903,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -923,7 +923,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarPPV",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -943,7 +943,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -963,7 +963,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosCuentaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -983,7 +983,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarTICorporativo",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1004,7 +1004,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/enviarEmail",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1025,7 +1025,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req,
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarDatosRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1046,7 +1046,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/cambiarContrasena",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1066,7 +1066,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RecuperarPasswordUsrRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1126,7 +1126,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
         const options = {
           method: "POST",
           url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
-          data: req,
+          data: req.body,
           headers: CONTENT_ACCEPT_JSON,
           auth: INTERNO_AUTH,
         };
@@ -1153,7 +1153,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarQuejaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1173,7 +1173,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) =
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarSugerenciaRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1193,7 +1193,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarIRD",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1213,7 +1213,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ValidarPreRegistroRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1233,7 +1233,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (re
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarPrecio",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1253,7 +1253,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarInformacionFiscalRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1273,7 +1273,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1293,7 +1293,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) =>
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqueteRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1313,7 +1313,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaVeTVPricesRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1333,7 +1333,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarDireccion",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1353,7 +1353,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res)
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaRevistaSKYRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1373,7 +1373,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, r
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarCanal",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1393,7 +1393,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) =
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Sesion/consultarMenu",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
@@ -1413,7 +1413,7 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/RN/GeneraURLChatRest",
-    data: req,
+    data: req.body,
     headers: CONTENT_ACCEPT_JSON,
     auth: INTERNO_AUTH,
   };
