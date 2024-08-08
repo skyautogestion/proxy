@@ -18,7 +18,7 @@ const limiter = rateLimit({
 
 const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
-  max: 3, // limit each IP to 3 requests per windowMs
+  max: 5, // limit each IP to 3 requests per windowMs
   keyGenerator: (req, res) => {
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   }
@@ -31,7 +31,7 @@ if ("development" === env) { // local development purposes
 
 // X-Rate-Limiting
 app.set('trust proxy', 1)
-app.use('/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest', preRegistroLimiter);
+//app.use('/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest', preRegistroLimiter);
 app.use(limiter);
 
 
@@ -1084,7 +1084,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, (req, res) => {
   //ip from client
   const ip = req.ip || req.headers['x-forwarded-for'] || null
 
