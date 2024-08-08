@@ -1431,6 +1431,26 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
     });
 });
 
+app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", (req, res) => {
+  const options = {
+    method: "POST",
+    url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/CrearRegistroRest",
+    data: req.body,
+    headers: CONTENT_ACCEPT_JSON,
+    auth: INTERNO_AUTH,
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      consoleError(error, req);
+      return res.status(500).json({ error: 'ocurrio un error inesperado' });
+    });
+});
+
 function consoleError(error, requestData) {
   const errorData   = error.response?.data?.error ?? error.message ?? error;
   const errorCode   = error.code;
