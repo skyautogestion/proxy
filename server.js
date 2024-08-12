@@ -2,16 +2,37 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const winston = require("winston");
+require('winston-daily-rotate-file');
 require("dotenv").config();
 const axios = require("axios");
+axios.defaults.timeout = 60000; // Set default timeout to 60 seconds
 const app = express();
 const cors = require("cors");
+const { v4: uuidv4 } = require('uuid');
 const env = process.env.NODE_ENV;
+
+const transport = new winston.transports.DailyRotateFile({
+  level: 'info',
+  filename: 'logs/application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: true,
+  maxSize: '20m',
+});
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    transport
+  ]
+});
 
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
   max: 100, // limit each IP to 5 requests per windowMs
   keyGenerator: (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   }
 });
@@ -20,6 +41,8 @@ const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
   max: 5, // limit each IP to 3 requests per windowMs
   keyGenerator: (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   }
 });
@@ -80,14 +103,25 @@ const INTERNO_AUTH = {
 };
 
 // listening for port
-app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server is running on ${process.env.PORT}`));
+app.listen(process.env.PORT, '0.0.0.0', () => logger.log("info", `App listening on port ${process.env.PORT}!`));
 
 app.get("/", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   res.json({ message: "Welcome !!!!" });
+});
+
+// Handle errors using the logger
+app.use((err, req, res, next) => {
+  // Log the error message at the error level
+  logger.error(err.message);
+  res.status(500).send();
 });
 
 // API request
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/generarQueja",
@@ -99,15 +133,18 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res)
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url:
@@ -120,10 +157,11 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, r
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
@@ -131,6 +169,8 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, r
 app.post(
   "/EnterpriseServices/Sel/Solicitud/Solicitud/responderEncuesta",
   (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
     const options = {
       method: "POST",
       url:
@@ -144,10 +184,11 @@ app.post(
     axios
       .request(options)
       .then(function (response) {
+        consoleSucess(response, id);
         res.json(response.data);
       })
       .catch(function (error) {
-        consoleError(error, req);
+        consoleError(error, req, id);
         return res.status(500).json({ error: 'ocurrio un error inesperado' });
       });
   }
@@ -156,6 +197,8 @@ app.post(
 app.post(
   "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
   (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
     const options = {
       method: "POST",
       url:
@@ -169,16 +212,19 @@ app.post(
     axios
       .request(options)
       .then(function (response) {
+        consoleSucess(response, id);
         res.json(response.data);
       })
       .catch(function (error) {
-        consoleError(error, req);
+        consoleError(error, req, id);
         return res.status(500).json({ error: 'ocurrio un error inesperado' });
       });
   }
 );
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/AutenticarUsuarioRest",
@@ -190,16 +236,18 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => 
   axios
     .request(options)
     .then(function (response) {
-      consoleSucess(response);
+      consoleSucess(response, id);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaConsumoDatosRest",
@@ -214,12 +262,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaDatosGeneralesRest",
@@ -234,12 +284,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest",
@@ -254,12 +306,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest",
@@ -274,7 +328,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
@@ -282,6 +336,8 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req,
 
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarServiciosRest",
@@ -296,12 +352,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/ModificarPasswordRegistroRest",
@@ -316,12 +374,14 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest",
@@ -336,12 +396,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPagosPorEventoRest",
@@ -356,12 +418,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPrecioRecargaRest",
@@ -376,12 +440,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
@@ -396,12 +462,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
@@ -416,12 +484,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario",
@@ -436,12 +506,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarEstadoCuenta",
@@ -456,12 +528,14 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFactura",
@@ -476,12 +550,14 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo",
@@ -496,12 +572,14 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarLDAP",
@@ -516,12 +594,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Pago/consultarPago",
@@ -536,12 +616,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarProducto",
@@ -556,12 +638,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarRegimenFiscalRest",
@@ -576,12 +660,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
@@ -596,12 +682,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarUsoCFDIRest",
@@ -616,12 +704,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest",
@@ -636,12 +726,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSolicitud",
@@ -656,12 +748,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/EjecutarRemoteBookingRest",
@@ -676,12 +770,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/RegistrarDatosFiscalesRest",
@@ -696,12 +792,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/obtenerFactura",
@@ -716,12 +814,14 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/restablecerContrasena",
@@ -736,12 +836,14 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCuentaRest",
@@ -756,12 +858,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest",
@@ -776,12 +880,14 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActivacionBlueToGoRest",
@@ -796,12 +902,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest",
@@ -816,12 +924,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest",
@@ -836,12 +946,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaControlRemotoRest",
@@ -856,12 +968,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarDatosFiscalesRest",
@@ -876,12 +990,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest",
@@ -896,12 +1012,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo",
@@ -916,12 +1034,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarPPV",
@@ -936,12 +1056,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest",
@@ -956,12 +1078,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosCuentaRest",
@@ -976,12 +1100,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarTICorporativo",
@@ -996,13 +1122,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/enviarEmail",
@@ -1017,13 +1145,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarDatosRest",
@@ -1038,13 +1168,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
 app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/cambiarContrasena",
@@ -1059,12 +1191,14 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RecuperarPasswordUsrRest",
@@ -1079,12 +1213,14 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   //ip from client
   const ip = req.ip || req.headers['x-forwarded-for'] || null
 
@@ -1111,7 +1247,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
 
   if (!token) {
     const date = new Date(Date.now()).toLocaleString();
-    console.log('fecha: ' + date + " | " + "NON_TOKEN_FOUND from IP: "+ip)
+    logger.error("NON_TOKEN_FOUND from IP: "+ip, {"id": id});
     return res.status(401).json({ msg: 'Unauthorized user' });
   }
 
@@ -1122,7 +1258,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
       if(!data["tokenProperties"].valid) {
         const reason = data["tokenProperties"].invalidReason;
         const date = new Date(Date.now()).toLocaleString();
-        console.log('fecha: ' + date + " | " + "captcha is invalid from IP: "+ip+" reason: "+reason);
+        logger.error("INVALID_CAPTCHA from IP: " + ip + " | reason: " + reason, {"id": id});
         return res.status(401).json({ msg: 'Unauthorized user' });
       } else { // call OSB
         const options = {
@@ -1139,19 +1275,21 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
             res.json(response.data);
           })
           .catch(function (error) {
-            consoleError(error, req);
+            consoleError(error, req, id);
             return res.status(500).json({ error: 'ocurrio un error inesperado' });
           });
       }
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarQuejaRest",
@@ -1166,12 +1304,14 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarSugerenciaRest",
@@ -1186,12 +1326,14 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarIRD",
@@ -1206,12 +1348,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ValidarPreRegistroRest",
@@ -1226,12 +1370,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarPrecio",
@@ -1246,12 +1392,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarInformacionFiscalRest",
@@ -1266,12 +1414,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest",
@@ -1286,12 +1436,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqueteRest",
@@ -1306,12 +1458,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) =>
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaVeTVPricesRest",
@@ -1326,12 +1480,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarDireccion",
@@ -1346,12 +1502,14 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaRevistaSKYRest",
@@ -1366,12 +1524,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarCanal",
@@ -1386,12 +1546,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Sesion/consultarMenu",
@@ -1406,12 +1568,14 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/RN/GeneraURLChatRest",
@@ -1426,12 +1590,14 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", (req, res) => {
+  const id = uuidv4();
+  consoleRequestStart(req, id);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/CrearRegistroRest",
@@ -1446,38 +1612,34 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req);
+      consoleError(error, req, id);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-function consoleError(error, requestData) {
+function consoleError(error, requestData, id) {
   const errorData   = error.response?.data?.error ?? error.message ?? error;
   const errorCode   = error.code;
   const errorCause  = error.cause;
   const errorUrl    = error.config?.url;
   const errorMethod    = error.config?.method;
-  
-  console.log(
-    'fecha: ' + getCurrentDate() + " | " + 
+
+  logger.error(
     'code: ' + errorCode + " | " + 
-    'error: ' + JSON.stringify(errorData) + " | " +
+    'error: ' + JSON.stringify(errorData) + " | " + 
     'cause: ' + JSON.stringify(errorCause) + " | " + 
     "url: " + errorUrl + " | " + 
     'method: ' + errorMethod + " | " + 
-    'requestData: '+JSON.stringify(requestData.body, null, 2)
+    'requestData: '+JSON.stringify(requestData.body, null, 2),
+    {"id": id}
   );
+  
 }
 
-function consoleSucess(response) {
-  console.log(
-    'fecha: ' + getCurrentDate() + " | " + 
-    'status: ' +response.status + " | " + 
-    'url: ' + response.config?.url + " | " + 
-    'response: ' + JSON.stringify(response.data)
-  );
+function consoleRequestStart(req, id) {
+  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(req.body), {"id": id});
 }
 
-function getCurrentDate() {
-  return new Date(Date.now()).toLocaleString();
+function consoleSucess(response, id) {
+  logger.info('status: ' + response.status + " | " +  'url: ' + response.config?.url + " | " +  'response: ' + JSON.stringify(response.data), {"id": id})
 }
