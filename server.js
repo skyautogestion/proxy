@@ -1623,6 +1623,10 @@ function consoleError(error, requestData, id) {
   const errorCause  = error.cause;
   const errorUrl    = error.config?.url;
   const errorMethod    = error.config?.method;
+  const body = requestData.body;
+  if(body && body.AutenticarUsuarioInputMessage?.Password) {
+    body.AutenticarUsuarioInputMessage.Password = "ENCRYPTED_AND_OMMITED";
+  }
 
   logger.error(
     'code: ' + errorCode + " | " + 
@@ -1630,14 +1634,18 @@ function consoleError(error, requestData, id) {
     'cause: ' + JSON.stringify(errorCause) + " | " + 
     "url: " + errorUrl + " | " + 
     'method: ' + errorMethod + " | " + 
-    'requestData: '+JSON.stringify(requestData.body, null, 2),
+    'requestData: '+JSON.stringify(body, null, 2),
     {"id": id}
   );
   
 }
 
 function consoleRequestStart(req, id) {
-  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(req.body), {"id": id});
+  const body = req.body;
+  if(body && body.AutenticarUsuarioInputMessage?.Password) {
+    body.AutenticarUsuarioInputMessage.Password = "ENCRYPTED_AND_OMMITED";
+  }
+  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(body), {"id": id});
 }
 
 function consoleSucess(response, id) {
