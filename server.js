@@ -1635,19 +1635,19 @@ function consoleError(error, requestData, id) {
     "url: " + errorUrl + " | " + 
     'method: ' + errorMethod + " | " + 
     'requestData: '+JSON.stringify(body, null, 2),
-    {"id": id}
+    {"_id": id, "_timestamp":  getCurrentDate()}
   );
   
 }
 
 function consoleRequestStart(req, id) {
-  const body = req.body;
-  if(body && body.AutenticarUsuarioInputMessage?.Password) {
-    body.AutenticarUsuarioInputMessage.Password = "ENCRYPTED_AND_OMMITED";
-  }
-  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(body), {"id": id});
+  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(req.body), {"_id": id, "_timestamp":  getCurrentDate()});
 }
 
 function consoleSucess(response, id) {
-  logger.info('status: ' + response.status + " | " +  'url: ' + response.config?.url + " | " +  'response: ' + JSON.stringify(response.data), {"id": id})
+  logger.info('status: ' + response.statusCode + " | " +  'url: ' + response.request?.uri?.href + " | " +  'response: ' + JSON.stringify(response.body), {"_id": id, "_timestamp":  getCurrentDate()})
+}
+
+function getCurrentDate() {
+  return new Date(Date.now()).toLocaleString();
 }
