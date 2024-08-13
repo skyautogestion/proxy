@@ -54,7 +54,6 @@ if ("development" === env) { // local development purposes
 
 // X-Rate-Limiting
 app.set('trust proxy', 1)
-//app.use('/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest', preRegistroLimiter);
 app.use(limiter);
 
 
@@ -1255,8 +1254,8 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
     .request(validateTokenOptions)
     .then(function (response) {
       const data = response.data
-      if(!data["tokenProperties"].valid) {
-        const reason = data["tokenProperties"].invalidReason;
+      const reason = data["tokenProperties"].invalidReason;
+      if(!data["tokenProperties"].valid && reason !== "DUPE") {
         const date = new Date(Date.now()).toLocaleString();
         logger.error("INVALID_CAPTCHA from IP: " + ip + " | reason: " + reason, {"id": id});
         return res.status(401).json({ msg: 'Unauthorized user' });
