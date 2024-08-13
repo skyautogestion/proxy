@@ -39,7 +39,7 @@ const limiter = rateLimit({
 
 const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
-  max: 5, // limit each IP to 3 requests per windowMs
+  max: 10, // limit each IP to 10 requests per windowMs
   keyGenerator: (req, res) => {
   const id = uuidv4();
   consoleRequestStart(req, id);
