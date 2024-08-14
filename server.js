@@ -45,7 +45,7 @@ const limiter = rateLimit({
 
 const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
-  max: 1, // limit each IP to 10 requests per windowMs
+  max: 10, // limit each IP to 10 requests per windowMs
   keyGenerator: (req, res) => {
     const id = uuidv4();
     req.headers["debug-id"] = id;
@@ -65,6 +65,8 @@ if ("development" === env) { // local development purposes
 }
 
 // X-Rate-Limiting
+// set it to 1 if there is nothing behind it (reverse-proxy, WAF, etc)
+// if WAF is active set it to 2
 app.set('trust proxy', 2)
 app.use(limiter);
 
