@@ -31,20 +31,32 @@ const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
   max: 100, // limit each IP to 5 requests per windowMs
   keyGenerator: (req, res) => {
-  const id = uuidv4();
-  consoleRequestStart(req, id);
+    const id = uuidv4();
+    req.headers["debug-id"] = id;
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
-  }
+  },
+  message: async (req, res) => {
+		const ip = req.ip || req.headers['x-forwarded-for'] || null;
+    const error = { code: "429", cause: "RATE-LIMIT IP " + ip }
+    consoleError(error, req, req.headers["debug-id"]);
+    return res.status(429).json({ error: 'Haz superado el número de intentos, por favor intenta en unos minutos.' });
+	},
 });
 
 const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
   max: 10, // limit each IP to 10 requests per windowMs
   keyGenerator: (req, res) => {
-  const id = uuidv4();
-  consoleRequestStart(req, id);
+    const id = uuidv4();
+    req.headers["debug-id"] = id;
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
-  }
+  },
+  message: async (req, res) => {
+		const ip = req.ip || req.headers['x-forwarded-for'] || null;
+    const error = { code: "429", cause: "RATE-LIMIT IP " + ip }
+    consoleError(error, req, req.headers["debug-id"]);
+    return res.status(429).json({ error: 'Haz superado el número de intentos, por favor intenta en unos minutos.' });
+	},
 });
 
 const allowedOrigins = ['https://qamiespaciosky.sky.com.mx', 'https://miespaciosky.sky.com.mx', 'https://misky.sky.com.mx'];
