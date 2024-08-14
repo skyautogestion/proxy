@@ -55,7 +55,22 @@ const preRegistroLimiter = rateLimit({
 		const ip = req.ip || req.headers['x-forwarded-for'] || null;
     const error = { code: "429", cause: "RATE-LIMIT IP " + ip }
     consoleError(error, req, req.headers["debug-id"]);
-    return res.status(429).json({ error: 'Haz superado el número de intentos, por favor intenta en unos minutos.' });
+    const errorResponse = {
+      "EBMHeaderResponse": {
+          "ErrorTecnico": {
+              "code": "ok",
+              "summary": null,
+              "detail": null,
+              "Sistema": "PreRegistroSelEBF"
+          },
+          "ErrorNegocio": {
+              "Estado": "ko",
+              "CodigoError": "-999",
+              "DescripcionError": "Haz superado el número de intentos, por favor intenta en unos minutos."
+          }
+      }
+  }
+    return res.status(429).json(errorResponse);
 	},
 });
 
