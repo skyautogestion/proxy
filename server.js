@@ -65,7 +65,7 @@ if ("development" === env) { // local development purposes
 }
 
 // X-Rate-Limiting
-app.set('trust proxy', '135.237.41.219')
+app.set('trust proxy', 2)
 app.use(limiter);
 
 
