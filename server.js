@@ -65,7 +65,7 @@ const preRegistroLimiter = rateLimit({
           },
           "ErrorNegocio": {
               "Estado": "ko",
-              "CodigoError": "-999",
+              "CodigoError": "100",
               "DescripcionError": "Haz superado el número de intentos, por favor intenta en unos minutos."
           }
       }
