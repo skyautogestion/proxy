@@ -6,7 +6,7 @@ const winston = require("winston");
 require('winston-daily-rotate-file');
 require("dotenv").config();
 const axios = require("axios");
-axios.defaults.timeout = 60000; // Set default timeout to 60 seconds
+axios.defaults.timeout = 60000 * 2; // Set default timeout to x minutes
 const app = express();
 const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
