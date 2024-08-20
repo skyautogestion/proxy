@@ -512,6 +512,8 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
     });
 });
 
+/*
+ * se deshabilita temporalmente debido a los ataques
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", limiter, (req, res) => {
   const id = uuidv4();
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
@@ -534,6 +536,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
+*/
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", limiter, (req, res) => {
   const id = uuidv4();
