@@ -17,7 +17,7 @@ const transport = new winston.transports.DailyRotateFile({
   filename: 'logs/application-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
-  maxSize: '20m',
+  maxSize: '100m',
 });
 
 const logger = winston.createLogger({
@@ -48,11 +48,12 @@ const preRegistroLimiter = rateLimit({
   max: 10, // limit each IP to 10 requests per windowMs
   keyGenerator: (req, res) => {
     const id = uuidv4();
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
     req.headers["debug-id"] = id;
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   },
   message: async (req, res) => {
-		const ip = req.ip || req.headers['x-forwarded-for'] || null;
+		const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
     const error = { code: "429", cause: "RATE-LIMIT IP " + ip }
     consoleError(error, req, req.headers["debug-id"]);
     const errorResponse = {
@@ -83,7 +84,7 @@ if ("development" === env) { // local development purposes
 // set it to 1 if there is nothing behind it (reverse-proxy, WAF, etc)
 // if WAF is active set it to 2
 app.set('trust proxy', 2)
-app.use(limiter);
+//app.use(limiter);
 
 
 // CORS
@@ -133,9 +134,10 @@ const INTERNO_AUTH = {
 // listening for port
 app.listen(process.env.PORT, '0.0.0.0', () => logger.log("info", `App listening on port ${process.env.PORT}!`));
 
-app.get("/", (req, res) => {
+app.get("/", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   res.json({ message: "Welcome !!!!" });
 });
 
@@ -147,9 +149,10 @@ app.use((err, req, res, next) => {
 });
 
 // API request
-app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/generarQueja",
@@ -161,18 +164,19 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", (req, res)
   axios
     .request(options)
     .then(function (response) {
-      consoleSucess(response, id);
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url:
@@ -185,11 +189,11 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", (req, r
   axios
     .request(options)
     .then(function (response) {
-      consoleSucess(response, id);
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
@@ -198,7 +202,8 @@ app.post(
   "/EnterpriseServices/Sel/Solicitud/Solicitud/responderEncuesta",
   (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
     const options = {
       method: "POST",
       url:
@@ -212,11 +217,11 @@ app.post(
     axios
       .request(options)
       .then(function (response) {
-        consoleSucess(response, id);
+        consoleSucess(response, id, ip);
         res.json(response.data);
       })
       .catch(function (error) {
-        consoleError(error, req, id);
+        consoleError(error, req, id, ip);
         return res.status(500).json({ error: 'ocurrio un error inesperado' });
       });
   }
@@ -226,7 +231,8 @@ app.post(
   "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
   (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
     const options = {
       method: "POST",
       url:
@@ -240,19 +246,20 @@ app.post(
     axios
       .request(options)
       .then(function (response) {
-        consoleSucess(response, id);
+        consoleSucess(response, id, ip);
         res.json(response.data);
       })
       .catch(function (error) {
-        consoleError(error, req, id);
+        consoleError(error, req, id, ip);
         return res.status(500).json({ error: 'ocurrio un error inesperado' });
       });
   }
 );
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/AutenticarUsuarioRest",
@@ -264,18 +271,19 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", (req, res) => 
   axios
     .request(options)
     .then(function (response) {
-      consoleSucess(response, id);
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaConsumoDatosRest",
@@ -290,14 +298,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaDatosGeneralesRest",
@@ -312,14 +321,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest",
@@ -334,14 +344,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest",
@@ -356,16 +367,17 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarServiciosRest",
@@ -380,14 +392,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/ModificarPasswordRegistroRest",
@@ -402,14 +415,15 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest",
@@ -424,14 +438,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPagosPorEventoRest",
@@ -446,14 +461,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPrecioRecargaRest",
@@ -468,14 +484,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
@@ -490,14 +507,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
@@ -512,14 +530,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario",
@@ -534,14 +553,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarEstadoCuenta",
@@ -556,14 +576,15 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFactura",
@@ -578,14 +599,15 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo",
@@ -600,14 +622,15 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Cuenta/consultarLDAP",
@@ -622,14 +645,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Pago/consultarPago",
@@ -644,14 +668,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarProducto",
@@ -666,14 +691,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarRegimenFiscalRest",
@@ -688,14 +714,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
@@ -710,14 +737,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarUsoCFDIRest",
@@ -732,14 +760,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest",
@@ -754,14 +783,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", (
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/crearSolicitud",
@@ -776,14 +806,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/EjecutarRemoteBookingRest",
@@ -798,14 +829,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/RegistrarDatosFiscalesRest",
@@ -820,14 +852,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Brm/Factura/obtenerFactura",
@@ -842,14 +875,15 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/restablecerContrasena",
@@ -864,14 +898,15 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCuentaRest",
@@ -886,14 +921,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", (req, res) => 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", (req, res) => {
+app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest",
@@ -908,14 +944,15 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActivacionBlueToGoRest",
@@ -930,14 +967,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest",
@@ -952,14 +990,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest",
@@ -974,14 +1013,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", (req, re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaControlRemotoRest",
@@ -996,14 +1036,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarDatosFiscalesRest",
@@ -1018,14 +1059,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest",
@@ -1040,14 +1082,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo",
@@ -1062,14 +1105,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarPPV",
@@ -1084,14 +1128,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", (req, res
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest",
@@ -1106,14 +1151,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarServiciosCuentaRest",
@@ -1128,14 +1174,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarTICorporativo",
@@ -1150,15 +1197,16 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Solicitud/enviarEmail",
@@ -1173,15 +1221,16 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/GestionarSSComprarDatosRest",
@@ -1196,15 +1245,16 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", (req,
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
 
-app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Okta/Usuario/cambiarContrasena",
@@ -1219,14 +1269,15 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", (req, 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RecuperarPasswordUsrRest",
@@ -1241,16 +1292,16 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", (req, res) 
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   //ip from client
-  const ip = req.ip || req.headers['x-forwarded-for'] || null
 
   // validate token
   const token = req.headers.acceptcrc;
@@ -1303,21 +1354,22 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
             res.json(response.data);
           })
           .catch(function (error) {
-            consoleError(error, req, id);
+            consoleError(error, req, id, ip);
             return res.status(500).json({ error: 'ocurrio un error inesperado' });
           });
       }
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(401).json({ msg: 'Unauthorized user' });
     });
 
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarQuejaRest",
@@ -1332,14 +1384,15 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/RegistrarSugerenciaRest",
@@ -1354,14 +1407,15 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Equipo/consultarIRD",
@@ -1376,14 +1430,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", preRegistroLimiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ValidarPreRegistroRest",
@@ -1398,14 +1453,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/PagoEvento/consultarPrecio",
@@ -1420,14 +1476,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", (re
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarInformacionFiscalRest",
@@ -1442,14 +1499,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", (r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest",
@@ -1464,14 +1522,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaPaqueteRest",
@@ -1486,14 +1545,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", (req, res) =>
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaVeTVPricesRest",
@@ -1508,14 +1568,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Siebel/Cuenta/consultarDireccion",
@@ -1530,14 +1591,15 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", (req
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/ConsultaRevistaSKYRest",
@@ -1552,14 +1614,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", (req, res)
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/PagoEvento/consultarCanal",
@@ -1574,14 +1637,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", (req, r
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/Sel/Sesion/consultarMenu",
@@ -1596,14 +1660,15 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", (req, res) =
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseServices/RN/GeneraURLChatRest",
@@ -1618,14 +1683,15 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", (req, res) => {
+app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", limiter, (req, res) => {
   const id = uuidv4();
-  consoleRequestStart(req, id);
+  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
     url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/CrearRegistroRest",
@@ -1640,12 +1706,12 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", (req, res) => {
       res.json(response.data);
     })
     .catch(function (error) {
-      consoleError(error, req, id);
+      consoleError(error, req, id, ip);
       return res.status(500).json({ error: 'ocurrio un error inesperado' });
     });
 });
 
-function consoleError(error, requestData, id) {
+function consoleError(error, requestData, id, ip) {
   const errorData   = error.response?.data?.error ?? error.message ?? error;
   const errorCode   = error.code;
   const errorCause  = error.cause;
@@ -1663,17 +1729,17 @@ function consoleError(error, requestData, id) {
     "url: " + errorUrl + " | " + 
     'method: ' + errorMethod + " | " + 
     'requestData: '+JSON.stringify(body, null, 2),
-    {"_id": id, "_timestamp":  getCurrentDate()}
+    { "_id": id, "_timestamp":  getCurrentDate(), "_ip": ip }
   );
   
 }
 
-function consoleRequestStart(req, id) {
-  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(req.body), {"_id": id, "_timestamp":  getCurrentDate()});
+function consoleRequestStart(req, id, ip) {
+  logger.info(" | url: " + req.path + " | method: " + req.method + " | Request received: " + JSON.stringify(req.body), {"_id": id, "_timestamp":  getCurrentDate(), "_ip": ip });
 }
 
-function consoleSucess(response, id) {
-  logger.info('status: ' + response.statusCode + " | " +  'url: ' + response.request?.uri?.href + " | " +  'response: ' + JSON.stringify(response.body), {"_id": id, "_timestamp":  getCurrentDate()})
+function consoleSucess(response, id, ip) {
+  logger.info('status: ' + response.statusCode + " | " +  'url: ' + response.request?.uri?.href + " | " +  'response: ' + JSON.stringify(response.body), {"_id": id, "_timestamp":  getCurrentDate(), "_ip": ip })
 }
 
 function getCurrentDate() {
