@@ -48,7 +48,6 @@ const preRegistroLimiter = rateLimit({
   max: 10, // limit each IP to 10 requests per windowMs
   keyGenerator: (req, res) => {
     const id = uuidv4();
-  const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
     req.headers["debug-id"] = id;
     return req.ip.replace(/:\d+[^:]*$/, '') // IP address from requestIp.mw(), as opposed to req.ip
   },
@@ -83,7 +82,7 @@ if ("development" === env) { // local development purposes
 // X-Rate-Limiting
 // set it to 1 if there is nothing behind it (reverse-proxy, WAF, etc)
 // if WAF is active set it to 2
-app.set('trust proxy', 2)
+app.set('trust proxy', 1)
 //app.use(limiter);
 
 
