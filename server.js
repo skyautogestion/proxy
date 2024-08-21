@@ -294,6 +294,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", limiter,
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -317,6 +318,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -340,6 +342,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -363,6 +366,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", limit
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -388,6 +392,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", l
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -411,6 +416,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -434,6 +440,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -457,6 +464,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -480,6 +488,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", limiter
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -503,6 +512,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -528,6 +538,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -552,6 +563,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", limi
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -575,6 +587,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -598,6 +611,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", limiter,
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -621,6 +635,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", l
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -644,6 +659,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", limiter, (re
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -667,6 +683,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", limiter, (r
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -690,6 +707,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", l
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -713,6 +731,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -736,6 +755,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -759,6 +779,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", limiter, (re
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -782,6 +803,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", l
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -805,6 +827,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", limiter,
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -828,6 +851,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", limiter
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -851,6 +875,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -874,6 +899,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", limiter, (
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -897,6 +923,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", li
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -920,6 +947,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", limiter, (req,
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -943,6 +971,7 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -966,6 +995,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", limiter, (
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -989,6 +1019,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1012,6 +1043,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", limiter,
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1035,6 +1067,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", limiter
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1058,6 +1091,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1081,6 +1115,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", limi
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1104,6 +1139,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1127,6 +1163,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", limiter, 
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1150,6 +1187,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1173,6 +1211,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", limi
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1196,6 +1235,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1220,6 +1260,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", limiter, (r
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1244,6 +1285,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", limit
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1268,6 +1310,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", limite
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1291,6 +1334,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", limiter, (r
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1303,10 +1347,9 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
   const id = uuidv4();
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
-  //ip from client
 
   // validate token
-  const token = req.headers.acceptcrc;
+  const token = req.headers?.acceptcrc;
 
   const validateTokenData = { 
     "event": { 
@@ -1328,7 +1371,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
 
   if (!token) {
     const date = new Date(Date.now()).toLocaleString();
-    logger.error("NON_TOKEN_FOUND from IP: "+ip, {"id": id});
+    logger.error("NON_TOKEN_FOUND from IP: "+ip, { "_id": id, "_timestamp":  getCurrentDate(), "_ip": ip });
     return res.status(401).json({ msg: 'Unauthorized user' });
   }
 
@@ -1342,6 +1385,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
         logger.error("INVALID_CAPTCHA from IP: " + ip + " | reason: " + reason, {"id": id});
         return res.status(401).json({ msg: 'Unauthorized user' });
       } else { // call OSB
+        logger.info("captcha exitoso, se continua al llamado del osb", { "_id": id, "_timestamp":  getCurrentDate(), "_ip": ip } );
         const options = {
           method: "POST",
           url: REACT_APP_URL_INTERNO + "/EnterpriseFlows/Sel/PreRegistroRest",
@@ -1353,6 +1397,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
         axios
           .request(options)
           .then(function (response) {
+            consoleSucess(response, id, ip);
             res.json(response.data);
           })
           .catch(function (error) {
@@ -1383,6 +1428,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", limiter, (req, re
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1406,6 +1452,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", limiter, (re
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1429,6 +1476,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", limiter, (
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1452,6 +1500,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", preRegistr
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1475,6 +1524,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", lim
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1498,6 +1548,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", li
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1521,6 +1572,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1544,6 +1596,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", limiter, (req
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1567,6 +1620,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", limiter, (
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1590,6 +1644,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", limi
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1613,6 +1668,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", limiter, (
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1636,6 +1692,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", limiter
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1659,6 +1716,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", limiter, (re
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1682,6 +1740,7 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", limiter, (req, r
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -1705,6 +1764,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", limiter, (req, res
   axios
     .request(options)
     .then(function (response) {
+      consoleSucess(response, id, ip);
       res.json(response.data);
     })
     .catch(function (error) {
