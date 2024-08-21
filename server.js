@@ -135,6 +135,7 @@ app.listen(process.env.PORT, '0.0.0.0', () => logger.log("info", `App listening 
 
 app.get("/", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   res.json({ message: "Welcome !!!!" });
@@ -150,6 +151,7 @@ app.use((err, req, res, next) => {
 // API request
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -174,6 +176,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/generarQueja", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -201,6 +204,7 @@ app.post(
   "/EnterpriseServices/Sel/Solicitud/Solicitud/responderEncuesta",
   (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
     const options = {
@@ -230,6 +234,7 @@ app.post(
   "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
   (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
     const options = {
@@ -257,7 +262,9 @@ app.post(
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+  res.set('debug-id', id);
   consoleRequestStart(req, id, ip);
   const options = {
     method: "POST",
@@ -281,6 +288,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/AutenticarUsuarioRest", limiter, (req,
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -305,6 +313,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaConsumoDatosRest", limiter,
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -329,6 +338,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaDatosGeneralesRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -353,6 +363,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqAdicionalDatosRest", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -379,6 +390,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaParrillaGuiaSkyRest", limit
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -403,6 +415,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarServiciosRest", l
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -427,6 +440,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/ModificarPasswordRegistroRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -451,6 +465,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ReEnviarEmailPreRegSelEBSRest", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -475,6 +490,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPagosPorEventoRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -499,6 +515,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPrecioRecargaRest", limiter
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -525,6 +542,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaAsociada",
  * se deshabilita temporalmente debido a los ataques
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -550,6 +568,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarCuentaEspecial",
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -574,6 +593,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarDatosUsuario", limi
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -598,6 +618,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarEstadoCuenta", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -622,6 +643,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFactura", limiter,
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -646,6 +668,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/consultarFacturaPeriodo", l
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -670,6 +693,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Cuenta/consultarLDAP", limiter, (re
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -694,6 +718,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Pago/consultarPago", limiter, (r
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -718,6 +743,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarProducto", l
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -742,6 +768,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarRegimenFiscalRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -766,6 +793,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosAdicionalesRest",
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -790,6 +818,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarUsoCFDIRest", limiter, (re
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -814,6 +843,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaSolicitudDeServicioRest", l
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -838,6 +868,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSolicitud", limiter,
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -862,6 +893,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/EjecutarRemoteBookingRest", limiter
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -886,6 +918,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/RegistrarDatosFiscalesRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -910,6 +943,7 @@ app.post("/mi-sky-api/EnterpriseServices/Brm/Factura/obtenerFactura", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -934,6 +968,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/restablecerContrasena", li
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -958,6 +993,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest", limiter, (req,
 
 app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -982,6 +1018,7 @@ app.post("/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPago
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1006,6 +1043,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActivacionBlueToGoRest", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1030,6 +1068,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ActualizaDatosFiscalesEBFRest", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1054,6 +1093,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaCanalGuiaSkyRest", limiter,
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1078,6 +1118,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaControlRemotoRest", limiter
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1102,6 +1143,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarDatosFiscalesRest", limite
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1126,6 +1168,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarEstadosDeCuentaRest", limi
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporativo", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1150,6 +1193,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarFacturaCorporati
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1174,6 +1218,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarPPV", limiter, 
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1198,6 +1243,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarSaldosCorrientesRest", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1222,6 +1268,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarServiciosCuentaRest", limi
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1247,6 +1294,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarTICorporativo", 
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1272,6 +1320,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/enviarEmail", limiter, (r
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1297,6 +1346,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/GestionarSSComprarDatosRest", limit
 
 app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1321,6 +1371,7 @@ app.post("/mi-sky-api/EnterpriseServices/Okta/Usuario/cambiarContrasena", limite
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1345,6 +1396,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RecuperarPasswordUsrRest", limiter, (r
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
 
@@ -1415,6 +1467,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/PreRegistroRest", preRegistroLimiter, 
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1439,6 +1492,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarQuejaRest", limiter, (req, re
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1463,6 +1517,7 @@ app.post("/mi-sky-api/EnterpriseFlows/Sel/RegistrarSugerenciaRest", limiter, (re
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1487,6 +1542,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Equipo/consultarIRD", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", preRegistroLimiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1511,6 +1567,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ValidarPreRegistroRest", preRegistr
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1535,6 +1592,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/PagoEvento/consultarPrecio", lim
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1559,6 +1617,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarInformacionFiscalRest", li
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1583,6 +1642,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultarCambioPaquetePrincipalRest
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1607,6 +1667,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaPaqueteRest", limiter, (req
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1631,6 +1692,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaVeTVPricesRest", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1655,6 +1717,7 @@ app.post("/mi-sky-api/EnterpriseServices/Siebel/Cuenta/consultarDireccion", limi
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1679,6 +1742,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/ConsultaRevistaSKYRest", limiter, (
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1703,6 +1767,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/PagoEvento/consultarCanal", limiter
 
 app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1727,6 +1792,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Sesion/consultarMenu", limiter, (re
 
 app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1751,6 +1817,7 @@ app.post("/mi-sky-api/EnterpriseServices/RN/GeneraURLChatRest", limiter, (req, r
 
 app.post("/mi-sky-api/EnterpriseFlows/Sel/CrearRegistroRest", limiter, (req, res) => {
   const id = uuidv4();
+  res.set('debug-id', id);
   const ip = req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
   consoleRequestStart(req, id, ip);
   const options = {
@@ -1801,7 +1868,11 @@ function consoleRequestStart(req, id, ip) {
 }
 
 function consoleSucess(response, id, ip) {
-  logger.info('status: ' + response.statusCode + " | " +  'url: ' + response.request?.uri?.href + " | " +  'response: ' + JSON.stringify(response.body), {"_id": id, "_timestamp":  getCurrentDate(), "_ip": ip })
+  logger.info(
+    'status: ' + (response.statusCode || response.status) + " | " +  
+    'url: ' + (response.request?.uri?.href || response.config?.url) + " | " +  
+    'response: ' + (JSON.stringify(response.body) || JSON.stringify(response.data)), 
+    {"_id": id, "_timestamp":  getCurrentDate(), "_ip": ip })
 }
 
 function getCurrentDate() {
