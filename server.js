@@ -82,7 +82,7 @@ if ("development" === env) { // local development purposes
 // X-Rate-Limiting
 // set it to 1 if there is nothing behind it (reverse-proxy, WAF, etc)
 // if WAF is active set it to 2
-app.set('trust proxy', 1)
+app.set('trust proxy', 'loopback')
 //app.use(limiter);
 
 
