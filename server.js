@@ -1,4 +1,5 @@
 // initializing installed dependencies
+const crypto = require('crypto');
 const express = require('express')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
@@ -308,7 +309,17 @@ app.post(
       .request(options)
       .then(function (response) {
         consoleSucess(response, id, ip)
-        res.json(response.data)
+
+        const data = response.data;
+
+        if(data && data.EBMHeaderResponse?.ErrorTecnico?.code === "ok" && data.EBMHeaderResponse?.ErrorNegocio?.Estado === "ok" && data.EBMHeaderResponse?.ErrorNegocio?.CodigoError === "0") {
+          const sessionId = generateSessionId();
+          const user = data.ListUsuariosSel?.UsuarioSelEBO?.NumeroCuenta;
+          res.set('X-MY-SKY-SESSION-ID', sessionId);
+          saveSessionIdWithUser(sessionId, user);
+        }
+
+        res.json(data)
       })
       .catch(function (error) {
         consoleError(error, req, id, ip)
@@ -1174,7 +1185,7 @@ app.post(
   },
 )
 
-/*
+
 app.post(
   '/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest',
   limiter,
@@ -1204,7 +1215,7 @@ app.post(
       })
   },
 )
-*/
+
 
 app.post(
   '/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest',
@@ -2340,4 +2351,13 @@ function consoleSucess(response, id, ip) {
 
 function getCurrentDate() {
   return new Date(Date.now()).toLocaleString()
+}
+
+function generateSessionId() {
+  const sessionId = crypto.randomBytes(60).toString('hex');
+  return sessionId;
+}
+
+function saveSessionIdWithUser(sessionId, user) {
+
 }
