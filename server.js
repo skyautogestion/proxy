@@ -201,7 +201,7 @@ app.post("/mi-sky-api/EnterpriseServices/Sel/Solicitud/crearSugerencia", limiter
 });
 
 app.post(
-  "/EnterpriseServices/Sel/Solicitud/Solicitud/responderEncuesta",
+  "/mi-sky-api/EnterpriseServices/Sel/Solicitud/Solicitud/responderEncuesta",
   (req, res) => {
   const id = uuidv4();
   res.set('debug-id', id);
@@ -231,7 +231,7 @@ app.post(
 );
 
 app.post(
-  "/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
+  "/mi-sky-api/EnterpriseServices/Sel/AltaSolicitudDeServicioRest",
   (req, res) => {
   const id = uuidv4();
   res.set('debug-id', id);
