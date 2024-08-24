@@ -2362,6 +2362,7 @@ function consoleError(error, requestData, id, ip) {
 }
 
 function consoleRequestStart(req, id, ip) {
+  const userAgent = req.headers['User-Agent'];
   logger.info(
     ' | url: ' +
       req.path +
@@ -2369,7 +2370,7 @@ function consoleRequestStart(req, id, ip) {
       req.method +
       ' | Request received: ' +
       JSON.stringify(req.body),
-    { _id: id, _timestamp: getCurrentDate(), _ip: ip },
+    { _id: id, _timestamp: getCurrentDate(), _ip: ip, "_user-agent": userAgent },
   )
 }
 
