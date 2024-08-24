@@ -1213,9 +1213,9 @@ app.post(
   },
 )
 
-/*
+
 app.post(
-  '/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest',
+  '/mi-sky-api/EnterpriseServices/Sel/consultarCuenta',
   limiter,
   (req, res) => {
     const id = uuidv4();
@@ -1253,7 +1253,6 @@ app.post(
       })
   },
 )
-*/
 
 app.post(
   '/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest',
