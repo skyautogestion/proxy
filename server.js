@@ -1213,7 +1213,7 @@ app.post(
   },
 )
 
-/*
+
 app.post(
   '/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest',
   limiter,
@@ -1253,7 +1253,7 @@ app.post(
       })
   },
 )
-*/
+
 
 app.post(
   '/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest',
