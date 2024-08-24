@@ -2370,7 +2370,7 @@ function consoleRequestStart(req, id, ip) {
       req.method +
       ' | Request received: ' +
       JSON.stringify(req.body),
-    { _id: id, _timestamp: getCurrentDate(), _ip: ip, "_user-agent": userAgent },
+    { _id: id, _timestamp: getCurrentDate(), _ip: ip, _userAgent: userAgent },
   )
 }
 
