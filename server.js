@@ -1,17 +1,18 @@
 // initializing installed dependencies
+import "reflect-metadata";
 const crypto = require('crypto');
-const express = require('express')
-const rateLimit = require('express-rate-limit')
-const helmet = require('helmet')
-const winston = require('winston')
-require('winston-daily-rotate-file')
-require('dotenv').config()
-const axios = require('axios')
-axios.defaults.timeout = 60000 * 2 // Set default timeout to x minutes
-const app = express()
-const cors = require('cors')
-const { v4: uuidv4 } = require('uuid')
-const env = process.env.NODE_ENV
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const winston = require('winston');
+require('winston-daily-rotate-file');
+require('dotenv').config();
+const axios = require('axios');
+axios.defaults.timeout = 60000 * 2; // Set default timeout to x minutes
+const app = express();
+const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
+const env = process.env.NODE_ENV;
 
 const transport = new winston.transports.DailyRotateFile({
   level: 'info',
