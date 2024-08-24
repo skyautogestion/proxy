@@ -1,18 +1,18 @@
 // initializing installed dependencies
-require('winston-daily-rotate-file')
-require('dotenv').config()
-const crypto = require('crypto')
-const express = require('express')
-const rateLimit = require('express-rate-limit')
-const helmet = require('helmet')
-const winston = require('winston')
-const { Pool } = require('pg')
-const axios = require('axios')
-axios.defaults.timeout = 60000 * 2 // Set default timeout to x minutes
-const app = express()
-const cors = require('cors')
-const { v4: uuidv4 } = require('uuid')
-const env = process.env.NODE_ENV
+require('winston-daily-rotate-file');
+require('dotenv').config();
+const crypto = require('crypto');
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const winston = require('winston');
+const { Pool } = require('pg');
+const axios = require('axios');
+axios.defaults.timeout = 60000 * 2; // Set default timeout to x minutes
+const app = express();
+const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
+const env = process.env.NODE_ENV;
 
 const transport = new winston.transports.DailyRotateFile({
   level: 'info',
@@ -20,11 +20,11 @@ const transport = new winston.transports.DailyRotateFile({
   datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
   maxSize: '100m',
-})
+});
 
 const logger = winston.createLogger({
   transports: [new winston.transports.Console(), transport],
-})
+});
 
 const limiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 30 seconds
@@ -43,7 +43,7 @@ const limiter = rateLimit({
         'Haz superado el número de intentos, por favor intenta en unos minutos.',
     })
   },
-})
+});
 
 const preRegistroLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minuto
@@ -76,22 +76,22 @@ const preRegistroLimiter = rateLimit({
     }
     return res.status(429).json(errorResponse)
   },
-})
+});
 
 const allowedOrigins = [
   'https://qamiespaciosky.sky.com.mx',
   'https://miespaciosky.sky.com.mx',
   'https://misky.sky.com.mx',
-]
+];
 if ('development' === env) {
   // local development purposes
-  allowedOrigins.push('https://localhost:3000')
+  allowedOrigins.push('https://localhost:3000');
 }
 
 // X-Rate-Limiting
 // set it to 1 if there is nothing behind it (reverse-proxy, WAF, etc)
 // if WAF is active set it to 2
-app.set('trust proxy', 2)
+app.set('trust proxy', 2);
 //app.use(limiter);
 
 // CORS
@@ -103,19 +103,19 @@ app.use(
     methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc'],
   }),
-)
+);
 
 // HSTS
-app.use(helmet())
+app.use(helmet());
 app.use(
   helmet.hsts({
     maxAge: 300,
     includeSubDomains: true,
     preload: true,
   }),
-)
+);
 
-app.use(express.json())
+app.use(express.json());
 
 const {
   REACT_APP_URL_INTERNO,
@@ -128,7 +128,7 @@ const {
   DATABASE_HOST,
   DATABASE_PORT,
   DATABASE_NAME,
-} = process.env
+} = process.env;
 
 const CONTENT_ACCEPT_JSON = {
   'Content-type': 'application/json',
@@ -145,7 +145,6 @@ const INTERNO_AUTH = {
   password: REACT_APP_PASSWORD_INTERNO ?? '',
 }
 
-
 const pool = new Pool({
   user: DATABASE_USERNAME,
   password: DATABASE_PASSWORD,
@@ -156,8 +155,8 @@ const pool = new Pool({
 
 // listening for port
 app.listen(process.env.PORT, '0.0.0.0', () => 
-  logger.log('info', `App listening on port ${process.env.PORT}!`)
-)
+  logger.log('info', `App listening on port ${process.env.PORT}!`),
+);
 
 app.get('/', limiter, (req, res) => {
   const id = uuidv4()
@@ -166,14 +165,15 @@ app.get('/', limiter, (req, res) => {
     req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null
   consoleRequestStart(req, id, ip)
   res.json({ message: 'Welcome !!!!' })
-})
+});
 
 // Handle errors using the logger
 app.use((err, req, res, next) => {
   // Log the error message at the error level
-  logger.error(err.message)
-  res.status(500).send()
-})
+  logger.error("UNHANDLED_EXCEPTION")
+  logger.error(err.message);
+  res.status(500).send();
+});
 
 // API request
 app.post(
@@ -1218,23 +1218,23 @@ app.post(
   '/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest',
   limiter,
   (req, res) => {
-    const id = uuidv4()
-    res.set('debug-id', id)
+    const id = uuidv4();
+    res.set('debug-id', id);
     const ip =
-      req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null
-    consoleRequestStart(req, id, ip)
+      req.ip.replace(/:\d+[^:]*$/, '') || req.headers['x-forwarded-for'] || null;
+    consoleRequestStart(req, id, ip);
     const options = {
       method: 'POST',
       url: REACT_APP_URL_INTERNO + '/EnterpriseServices/Sel/ConsultaCuentaRest',
       data: req.body,
       headers: CONTENT_ACCEPT_JSON,
       auth: INTERNO_AUTH,
-    }
+    };
 
     const userHeader = req.headers['X-MY-SKY-ACCOUNT-NUMBER'] || '';
     const userPayload = req.body?.accountNumber || '';
     const sessionId = req.headers['X-MY-SKY-SESSION-ID'] || '';
-    const isValidSession = isValidSessionId(sessionId, userHeader, userPayload)
+    const isValidSession = isValidSessionId(sessionId, userHeader, userPayload);
 
     if(!isValidSession) {
       logger.error('sesión invalida cuenta: '+userHeader, { _id: id, _timestamp: getCurrentDate(), _ip: ip },)
@@ -1244,12 +1244,12 @@ app.post(
     axios
       .request(options)
       .then(function (response) {
-        consoleSucess(response, id, ip)
-        res.json(response.data)
+        consoleSucess(response, id, ip);
+        res.json(response.data);
       })
       .catch(function (error) {
-        consoleError(error, req, id, ip)
-        return res.status(500).json({ error: 'ocurrio un error inesperado' })
+        consoleError(error, req, id, ip);
+        return res.status(500).json({ error: 'ocurrio un error inesperado' });
       })
   },
 )
