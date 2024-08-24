@@ -1,17 +1,18 @@
 // initializing installed dependencies
-const crypto = require('crypto');
-const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const winston = require('winston');
-require('winston-daily-rotate-file');
-require('dotenv').config();
-const axios = require('axios');
-axios.defaults.timeout = 60000 * 2; // Set default timeout to x minutes
-const app = express();
-const cors = require('cors');
-const { v4: uuidv4 } = require('uuid');
-const env = process.env.NODE_ENV;
+require('winston-daily-rotate-file')
+require('dotenv').config()
+const crypto = require('crypto')
+const express = require('express')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
+const winston = require('winston')
+const { Pool } = require('pg')
+const axios = require('axios')
+axios.defaults.timeout = 60000 * 2 // Set default timeout to x minutes
+const app = express()
+const cors = require('cors')
+const { v4: uuidv4 } = require('uuid')
+const env = process.env.NODE_ENV
 
 const transport = new winston.transports.DailyRotateFile({
   level: 'info',
@@ -122,6 +123,11 @@ const {
   REACT_APP_PASSWORD_INTERNO,
   REACT_APP_GOOGLE_API_KEY,
   REACT_APP_RECAPTCHA_KEY,
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  DATABASE_HOST,
+  DATABASE_PORT,
+  DATABASE_NAME,
 } = process.env
 
 const CONTENT_ACCEPT_JSON = {
@@ -139,9 +145,18 @@ const INTERNO_AUTH = {
   password: REACT_APP_PASSWORD_INTERNO ?? '',
 }
 
+
+const pool = new Pool({
+  user: DATABASE_USERNAME,
+  password: DATABASE_PASSWORD,
+  host: DATABASE_HOST,
+  port: DATABASE_PORT,
+  database: DATABASE_NAME,
+});
+
 // listening for port
-app.listen(process.env.PORT, '0.0.0.0', () =>
-  logger.log('info', `App listening on port ${process.env.PORT}!`),
+app.listen(process.env.PORT, '0.0.0.0', () => 
+  logger.log('info', `App listening on port ${process.env.PORT}!`)
 )
 
 app.get('/', limiter, (req, res) => {
@@ -307,16 +322,21 @@ app.post(
 
     axios
       .request(options)
-      .then(function (response) {
+      .then(async function (response) {
         consoleSucess(response, id, ip)
 
-        const data = response.data;
+        const data = response.data
 
-        if(data && data.EBMHeaderResponse?.ErrorTecnico?.code === "ok" && data.EBMHeaderResponse?.ErrorNegocio?.Estado === "ok" && data.EBMHeaderResponse?.ErrorNegocio?.CodigoError === "0") {
-          const sessionId = generateSessionId();
-          const user = data.ListUsuariosSel?.UsuarioSelEBO?.NumeroCuenta;
-          res.set('X-MY-SKY-SESSION-ID', sessionId);
-          saveSessionIdWithUser(sessionId, user);
+        if (
+          data &&
+          data.EBMHeaderResponse?.ErrorTecnico?.code === 'ok' &&
+          data.EBMHeaderResponse?.ErrorNegocio?.Estado === 'ok' &&
+          data.EBMHeaderResponse?.ErrorNegocio?.CodigoError === '0'
+        ) {
+          const sessionId = generateSessionId()
+          const user = data.ListUsuariosSel?.UsuarioSelEBO?.[0]?.NumeroCuenta
+          res.set('X-MY-SKY-SESSION-ID', sessionId)
+          await saveSessionIdWithUser(sessionId, user)
         }
 
         res.json(data)
@@ -693,6 +713,16 @@ app.post(
       data: req.body,
       headers: CONTENT_ACCEPT_JSON,
       auth: INTERNO_AUTH,
+    }
+
+    const userHeader = req.headers['X-MY-SKY-ACCOUNT-NUMBER'] || '';
+    const userPayload = req.body?.accountNumber || '';
+    const sessionId = req.headers['X-MY-SKY-SESSION-ID'] || '';
+    const isValidSession = isValidSessionId(sessionId, userHeader, userPayload)
+
+    if(!isValidSession) {
+      logger.error('sesión invalida cuenta: '+userHeader, { _id: id, _timestamp: getCurrentDate(), _ip: ip },)
+      return res.status(401).json({ msg: 'Unauthorized user' });
     }
 
     axios
@@ -1185,7 +1215,7 @@ app.post(
   },
 )
 
-/*
+
 app.post(
   '/mi-sky-api/EnterpriseServices/Sel/ConsultaCuentaRest',
   limiter,
@@ -1203,6 +1233,16 @@ app.post(
       auth: INTERNO_AUTH,
     }
 
+    const userHeader = req.headers['X-MY-SKY-ACCOUNT-NUMBER'] || '';
+    const userPayload = req.body?.accountNumber || '';
+    const sessionId = req.headers['X-MY-SKY-SESSION-ID'] || '';
+    const isValidSession = isValidSessionId(sessionId, userHeader, userPayload)
+
+    if(!isValidSession) {
+      logger.error('sesión invalida cuenta: '+userHeader, { _id: id, _timestamp: getCurrentDate(), _ip: ip },)
+      return res.status(401).json({ msg: 'Unauthorized user' });
+    }
+
     axios
       .request(options)
       .then(function (response) {
@@ -1215,7 +1255,6 @@ app.post(
       })
   },
 )
-*/
 
 app.post(
   '/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest',
@@ -2354,10 +2393,32 @@ function getCurrentDate() {
 }
 
 function generateSessionId() {
-  const sessionId = crypto.randomBytes(60).toString('hex');
-  return sessionId;
+  const sessionId = crypto.randomBytes(60).toString('hex')
+  return sessionId
 }
 
-function saveSessionIdWithUser(sessionId, user) {
-
+async function saveSessionIdWithUser(sessionId, user) {
+  const searchQuery = "SELECT token_id FROM token_session_my_sky WHERE account_number = $1;"
+  const resultSearchToken = await pool.query(searchQuery, [user])
+  if(resultSearchToken && resultSearchToken.rows?.length > 0) {
+    const query = 'UPDATE token_session_my_sky SET token_id = $1 WHERE account_number = $2;';
+    const values = [sessionId, user]
+    await pool.query(query, values)
+  } else {
+    const query = 'INSERT INTO token_session_my_sky(token_id, account_number) VALUES ($1, $2);';
+    const values = [sessionId, user]
+    await pool.query(query, values)
+  }
 }
+
+async function isValidSessionId(sessionId, userHeader, userPayload) {
+  /*
+  if(userHeader !== userPayload) 
+    return false;
+  */
+  const searchQuery = "SELECT token_id FROM token_session_my_sky WHERE account_number = $1 AND token_id = $2;"
+  const resultSearchToken = await pool.query(searchQuery, [user, sessionId])
+  return resultSearchToken && resultSearchToken.rows?.length > 0;
+}
+
+
