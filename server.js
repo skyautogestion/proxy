@@ -322,7 +322,7 @@ app.post(
 
     axios
       .request(options)
-      .then(async function (response) {
+      .then(function (response) {
         consoleSucess(response, id, ip)
 
         const data = response.data
@@ -336,10 +336,8 @@ app.post(
           const sessionId = generateSessionId()
           const user = data.ListUsuariosSel?.UsuarioSelEBO?.[0]?.NumeroCuenta
           res.set('X-MY-SKY-SESSION-ID', sessionId)
-          await saveSessionIdWithUser(sessionId, user)
+          saveSessionIdWithUser(sessionId, user).then(res.json(data))
         }
-
-        res.json(data)
       })
       .catch(function (error) {
         consoleError(error, req, id, ip)
