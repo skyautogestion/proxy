@@ -336,7 +336,8 @@ app.post(
           const sessionId = generateSessionId()
           const user = data.ListUsuariosSel?.UsuarioSelEBO?.[0]?.NumeroCuenta
           res.set('X-MY-SKY-SESSION-ID', sessionId)
-          saveSessionIdWithUser(sessionId, user).then(res.json(data))
+          //saveSessionIdWithUser(sessionId, user).then(res.json(data))
+          res.json(data)
         }
       })
       .catch(function (error) {
@@ -713,6 +714,7 @@ app.post(
       auth: INTERNO_AUTH,
     }
 
+    /*
     const userHeader = req.headers['X-MY-SKY-ACCOUNT-NUMBER'] || '';
     const userPayload = req.body?.accountNumber || '';
     const sessionId = req.headers['X-MY-SKY-SESSION-ID'] || '';
@@ -722,6 +724,7 @@ app.post(
       logger.error('sesión invalida cuenta: '+userHeader, { _id: id, _timestamp: getCurrentDate(), _ip: ip },)
       return res.status(401).json({ msg: 'Unauthorized user' });
     }
+    */
 
     axios
       .request(options)
@@ -1231,6 +1234,7 @@ app.post(
       auth: INTERNO_AUTH,
     };
 
+    /*
     const userHeader = req.headers['X-MY-SKY-ACCOUNT-NUMBER'] || '';
     const userPayload = req.body?.accountNumber || '';
     const sessionId = req.headers['X-MY-SKY-SESSION-ID'] || '';
@@ -1240,6 +1244,7 @@ app.post(
       logger.error('sesión invalida cuenta: '+userHeader, { _id: id, _timestamp: getCurrentDate(), _ip: ip },)
       return res.status(401).json({ msg: 'Unauthorized user' });
     }
+    */
 
     axios
       .request(options)
