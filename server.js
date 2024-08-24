@@ -1,5 +1,4 @@
 // initializing installed dependencies
-import "reflect-metadata";
 const crypto = require('crypto');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
