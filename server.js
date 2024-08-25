@@ -101,7 +101,7 @@ app.use(
     credentials: true,
     preflightContinue: false,
     methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc', 'User-Agent'],
   }),
 );
 
@@ -1245,7 +1245,7 @@ app.post(
       return res.status(401).json({ msg: 'Unauthorized user' });
     }
     */
-
+/*
     axios
       .request(options)
       .then(function (response) {
