@@ -101,7 +101,7 @@ app.use(
     credentials: true,
     preflightContinue: false,
     methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc', 'User-Agent'],
   }),
 );
 
@@ -1216,7 +1216,7 @@ app.post(
   },
 )
 
-
+/*
 app.post(
   '/mi-sky-api/EnterpriseServices/Sel/consultarCuenta',
   limiter,
@@ -1258,6 +1258,7 @@ app.post(
       })
   },
 )
+*/
 
 app.post(
   '/mi-sky-api/SbConsultaHorariosPagoPorEventoSelEBS/ConsultaHorariosPagoPorEventoRest',
