@@ -2366,7 +2366,7 @@ function consoleError(error, requestData, id, ip) {
 }
 
 function consoleRequestStart(req, id, ip) {
-  const userAgent = req.headers['User-Agent'];
+  const userAgent = req.headers['User-Agent'] || '';
   logger.info(
     ' | url: ' +
       req.path +
