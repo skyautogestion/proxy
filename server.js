@@ -101,7 +101,7 @@ app.use(
     credentials: true,
     preflightContinue: false,
     methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc', 'User-Agent'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Acceptcrc', 'acceptcrc'],
   }),
 );
 
